@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include credit_limit_control *.css
+recursive-include credit_limit_control *.csv
+recursive-include credit_limit_control *.html
+recursive-include credit_limit_control *.ico
+recursive-include credit_limit_control *.js
+recursive-include credit_limit_control *.json
+recursive-include credit_limit_control *.md
+recursive-include credit_limit_control *.png
+recursive-include credit_limit_control *.py
+recursive-include credit_limit_control *.svg
+recursive-include credit_limit_control *.txt
+recursive-exclude credit_limit_control *.pyc
