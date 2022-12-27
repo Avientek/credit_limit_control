@@ -102,13 +102,21 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-#	"*": {
-#		"on_update": "method",
-#		"on_cancel": "method",
-#		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Sales Order": {
+		"before_submit": "credit_limit_control.events.sales_order.before_submit"
+	},
+	"Sales Invoice": {
+		"before_submit": "credit_limit_control.events.sales_invoice.before_submit"
+	},
+	"Purchase Order": {
+		"before_submit": "credit_limit_control.events.purchase_order.before_submit"
+	},
+	"Purchase Invoice": {
+		"before_submit": "credit_limit_control.events.purchase_invoice.before_submit"
+	}
+}
+
 
 # Scheduled Tasks
 # ---------------
@@ -185,3 +193,34 @@ app_license = "MIT"
 # auth_hooks = [
 #	"credit_limit_control.auth.validate"
 # ]
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["name", "in",
+			[
+				#Customer
+				'Customer-overdue_limit',
+				'Customer-overdue_limit_settings',
+				#Account Settings
+				'Accounts Settings-overdue_controller'
+				#Supplier
+				'Supplier-credit_and_billing_limits',
+				'Supplier-credit_limit',
+				'Supplier-billing_limit'
+			]
+			]
+		]
+	}
+	# {
+    #     "dt": "Property Setter",
+    #     "filters": [
+    #         ["name", "in",
+	# 		[
+
+	# 		]
+	# 		]
+	# 	]
+
+	# }
+]
