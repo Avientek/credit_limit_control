@@ -203,7 +203,7 @@ fixtures = [
 				'Customer-overdue_limit',
 				'Customer-overdue_limit_settings',
 				#Account Settings
-				'Accounts Settings-overdue_controller'
+				'Accounts Settings-overdue_controller',
 				#Supplier
 				'Supplier-credit_and_billing_limits',
 				'Supplier-credit_limit',
