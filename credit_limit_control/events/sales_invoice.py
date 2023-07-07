@@ -19,5 +19,5 @@ def before_submit(doc, method):
 
     if customer_overdue_amount.overdue_limit and role_assigned not in frappe.get_roles(user): 
         for i in customer_overdue_amount.overdue_limit:
-            if query[0].grand_total>=i.credit_limit:
+            if query and query[0].grand_total>=i.credit_limit:
                 frappe.throw("You cannot Submit due to Overdue Limit")
