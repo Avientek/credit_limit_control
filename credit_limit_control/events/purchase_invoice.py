@@ -3,7 +3,7 @@ import frappe
 def before_submit(doc, method):
     query=frappe.db.sql(f"""
     SELECT
-        SUM(pi.grand_total) AS grand_total,
+        SUM(pi.outstanding_amount) AS outstanding_amount,
         pii.purchase_order AS purchase_order
     FROM
         `tabPurchase Invoice` AS pi LEFT JOIN
@@ -19,6 +19,6 @@ def before_submit(doc, method):
     role_assigned=frappe.db.get_single_value('Accounts Settings','overdue_controller')
 
     if supplier.billing_limit and role_assigned not in frappe.get_roles(user):
-            if query and query[0].grand_total>=supplier.billing_limit :
+            if query and query[0].outstanding_amount>=supplier.billing_limit :
                 frappe.throw("You cannot Submit due to Billing Limit")
     
