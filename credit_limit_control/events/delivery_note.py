@@ -5,7 +5,7 @@ from frappe.utils import flt
 def get_available_credit(customer, company):
     """Calculate available customer credit."""
 
-    # 1) Credit Limit from Customer Credit Limit table
+    # 1. Credit Limit
     row = frappe.db.sql("""
         SELECT credit_limit
         FROM `tabCustomer Credit Limit`
@@ -14,28 +14,28 @@ def get_available_credit(customer, company):
 
     credit_limit = flt(row[0].credit_limit) if row else 0.0
 
-    # 2) Unpaid Invoices
+    # 2. Unpaid Invoices
     unpaid_invoices = flt(frappe.db.sql("""
         SELECT IFNULL(SUM(outstanding_amount), 0)
         FROM `tabSales Invoice`
         WHERE docstatus = 1 AND customer = %s AND outstanding_amount > 0
-    """, (customer,))[0][0])
+    """, customer)[0][0])
 
-    # 3) Open Sales Orders
+    # 3. Open Sales Orders
     open_so = flt(frappe.db.sql("""
         SELECT IFNULL(SUM(grand_total), 0)
         FROM `tabSales Order`
         WHERE docstatus = 1 AND customer = %s AND IFNULL(per_delivered, 0) < 100
-    """, (customer,))[0][0])
+    """, customer)[0][0])
 
-    # 4) Open Delivery Notes
+    # 4. Open Delivery Notes
     open_dn = flt(frappe.db.sql("""
         SELECT IFNULL(SUM(grand_total), 0)
         FROM `tabDelivery Note`
         WHERE docstatus = 1 AND customer = %s AND IFNULL(per_billed, 0) < 100
-    """, (customer,))[0][0])
+    """, customer)[0][0])
 
-    # 5) Unallocated Advances
+    # 5. Unallocated Advances
     advances = flt(frappe.db.sql("""
         SELECT IFNULL(SUM(unallocated_amount), 0)
         FROM `tabPayment Entry`
@@ -44,32 +44,23 @@ def get_available_credit(customer, company):
         AND payment_type='Receive'
         AND party=%s
         AND IFNULL(unallocated_amount, 0) > 0
-    """, (customer,))[0][0])
+    """, customer)[0][0])
 
     return flt(credit_limit - unpaid_invoices - open_so - open_dn + advances)
 
 
-def format_currency(v):
-    return "{:,.2f}".format(flt(v))
+def format_currency(val):
+    return "{:,.2f}".format(flt(val))
 
 
-#---------------------------------------------
-# SALES ORDER VALIDATION
-#---------------------------------------------
-def validate_sales_order_credit_limit(doc, method=None):
+def validate_delivery_note_credit_limit(doc, method=None):
     if not doc.customer:
         return
 
     available = get_available_credit(doc.customer, doc.company)
-    so_value = flt(doc.grand_total or 0)
+    dn_value = flt(doc.grand_total)
 
-    if so_value > available:
+    if dn_value > available:
         frappe.throw(
-            _(
-                "Sales Order cannot be submitted. Customer has only {available} available credit limit. "
-                "Order value ({value}) exceeds the limit."
-            ).format(
-                available=format_currency(available),
-                value=format_currency(so_value),
-            )
+            _("Delivery Note cannot be submitted. Customer credit limit exceeded based on pending invoices, open SO, open DN and advances.")
         )

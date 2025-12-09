@@ -103,9 +103,12 @@ app_license = "MIT"
 # Hook on document methods and events
 
 doc_events = {
-	# "Sales Order": {
-	# 	"before_submit": "credit_limit_control.events.sales_order.before_submit"
-	# },
+	"Sales Order": {
+		"before_submit": "credit_limit_control.events.sales_order.validate_sales_order_credit_limit"
+	},
+	"Delivery Note": {
+		"before_submit": "credit_limit_control.events.delivery_note.validate_delivery_note_credit_limit"
+	},
 	"Sales Invoice": {
 		"before_submit": "credit_limit_control.events.sales_invoice.before_submit"
 	},
