@@ -109,9 +109,9 @@ doc_events = {
 	"Delivery Note": {
 		"before_submit": "credit_limit_control.events.delivery_note.validate_delivery_note_credit_limit"
 	},
-	"Sales Invoice": {
-		"before_submit": "credit_limit_control.events.sales_invoice.before_submit"
-	},
+	# "Sales Invoice": {
+	# 	"before_submit": "credit_limit_control.events.sales_invoice.before_submit"
+	# },
 	"Purchase Order": {
 		"before_submit": "credit_limit_control.events.purchase_order.before_submit"
 	},
