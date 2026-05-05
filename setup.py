@@ -11,7 +11,7 @@ setup(
 	version=version,
 	description="to limit the credit",
 	author="avientek",
-	author_email="avientek.frappe",
+	author_email="info@avientek.com",
 	packages=find_packages(),
 	zip_safe=False,
 	include_package_data=True,
