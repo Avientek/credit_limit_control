@@ -1,7 +1,7 @@
 [project]
 name = "credit_limit_control"
 authors = [
-    { name = "avientek", email = "avientek.frappe"}
+    { name = "avientek", email = "info@avientek.com"}
 ]
 description = "to limit the credit"
 requires-python = ">=3.10"
